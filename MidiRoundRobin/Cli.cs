@@ -48,9 +48,9 @@ namespace MidiRoundRobin
 
             var midiIn = ins[selectedMidiIn];
             var midiOut = outs[selectedMidiOut];
-            var midiChannels = GetNumbers("Select 2 or more midi channels to roud robin (e.g. 1,3,4)", 1, 16, 2, 16);
+            var midiChannels = GetNumbers("Select 2 or more midi channels to roud robin (e.g. 1,3,4)", 1, 16, 2, null);
 
-            Console.WriteLine($"Round robin from '{midiIn.Description}' to '{midiOut.Description}' on channels {string.Join(", ", midiChannels)}.");
+            Console.WriteLine($"Round robin from '{midiIn.Description}' to '{midiOut.Description}' on channels {string.Join(",", midiChannels)}.");
             Console.WriteLine($"Press a key to exit.");
 
             manager.StartRoundRobin(midiIn, midiOut, midiChannels);
@@ -59,6 +59,11 @@ namespace MidiRoundRobin
             Console.WriteLine($"Exiting.");
 
             manager.StopRoundRobin();
+        }
+
+        public void PrintUsage()
+        {
+
         }
 
         private int GetNumber(string message, int min, int max)
@@ -75,7 +80,7 @@ namespace MidiRoundRobin
             }
         }
 
-        private byte[] GetNumbers(string message, int min, int max, int nMin, int nMax)
+        private byte[] GetNumbers(string message, int min, int max, int? nMin, int? nMax)
         {
             while (true)
             {
@@ -98,7 +103,10 @@ namespace MidiRoundRobin
                     }
                 }
 
-                if (numbers.Count < nMin || numbers.Count > nMax)
+                if (nMin.HasValue && numbers.Count < nMin)
+                    continue;
+
+                if (nMax.HasValue && numbers.Count > nMax)
                     continue;
 
                 return numbers.ToArray();
