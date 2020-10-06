@@ -1,5 +1,5 @@
 ﻿using System;
-using MB.MidiRoundRobin;
+using MB.MidiRoundRobin.Core;
 
 namespace MidiRoundRobin
 {

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using Commons.Music.Midi;
 
-namespace MB.MidiRoundRobin
+namespace MB.MidiRoundRobin.Core
 {
     public class RRManager
     {
@@ -60,7 +60,7 @@ namespace MB.MidiRoundRobin
                 var freeChannels = _channels.Where(x => !busyChannels.Contains(x)).ToArray();
 
                 var outputChannel = _channels[_channelIndex % _channels.Length];
-                if (busyChannels.Contains(outputChannel) && freeChannels.Count()>0)
+                if (busyChannels.Contains(outputChannel) && freeChannels.Count() > 0)
                 {
                     outputChannel = freeChannels[_channelIndex % freeChannels.Length];
                 }
