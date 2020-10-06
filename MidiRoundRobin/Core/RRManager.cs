@@ -47,7 +47,6 @@ namespace MB.MidiRoundRobin.Core
         private void Input_MessageReceived(object sender, MidiReceivedEventArgs e)
         {
             var data = string.Join(", ", e.Data);
-            // Console.WriteLine($"[{data}]       {e.Start} - {e.Length} - {e.Timestamp}");
 
             var eventType = e.Data[0];
 
@@ -55,6 +54,9 @@ namespace MB.MidiRoundRobin.Core
             {
                 var note = e.Data[1];
                 var velocity = e.Data[2];
+
+                if (_noteChannel.ContainsKey(note))
+                    return; // note already pressed. Nothing to do
 
                 var busyChannels = _noteChannel.Values;
                 var freeChannels = _channels.Where(x => !busyChannels.Contains(x)).ToArray();
@@ -65,11 +67,8 @@ namespace MB.MidiRoundRobin.Core
                     outputChannel = freeChannels[_channelIndex % freeChannels.Length];
                 }
 
-                // Console.WriteLine($"Sending note on to channel {outputChannel}");
-
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOn + outputChannel - 1), note, velocity };
                 _midiOutput.Send(dataToSend, 0, 3, 0);
-
 
                 _noteChannel[note] = outputChannel;
 
@@ -80,16 +79,28 @@ namespace MB.MidiRoundRobin.Core
                 var note = e.Data[1];
                 var velocity = e.Data[2];
 
+                if (!_noteChannel.ContainsKey(note))
+                    return; // note already stopped. Nothing to do
+
                 var outputChannel = _noteChannel[note];
                 _noteChannel.Remove(note);
-
-                // Console.WriteLine($"Sending note off to channel {outputChannel}");
 
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOff + outputChannel - 1), note, velocity };
                 _midiOutput.Send(dataToSend, 0, 3, 0);
             }
             else if (eventType == MidiEvent.Pitch)
             {
+                // Console.WriteLine($"[{string.Join(", ", data)}] {e.Start} - {e.Length} - {e.Timestamp}");
+
+                //var note = e.Data[1];
+                //var velocity = e.Data[2];
+                //
+                //_midiOutput.Send(e.Data, 0, 3, 0);
+            }
+            else if (eventType == MidiEvent.CC)
+            {
+                // Console.WriteLine($"[{string.Join(", ", data)}] {e.Start} - {e.Length} - {e.Timestamp}");
+
                 //var note = e.Data[1];
                 //var velocity = e.Data[2];
                 //
