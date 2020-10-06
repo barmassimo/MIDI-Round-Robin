@@ -1,17 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>MB.MidiRoundRobin</RootNamespace>
-    <AssemblyName>MB.MidiRoundRobin</AssemblyName>
-    <Version>1.2.0</Version>
+    <RootNamespace>MB.MidiRoundRobin.Cli</RootNamespace>
+    <AssemblyName>MB.MidiRoundRobin.Cli</AssemblyName>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="managed-midi" Version="1.9.14" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MB.MidiRoundRobin\MB.MidiRoundRobin.csproj" />
   </ItemGroup>
 
   <ItemGroup>

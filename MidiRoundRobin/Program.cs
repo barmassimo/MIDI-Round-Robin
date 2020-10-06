@@ -16,10 +16,10 @@ namespace MidiRoundRobin
              * see appsettings.json (empty by default)
              * 
              * 2. command line arguments (overwrites configuration file)
-             * > MB.MidiRoundRobin.exe --midiIn="Arturia KeyStep 32" --midiOut="Elektron Model:Cycles" --channels="1,2,3,4,5,6"
+             * > MB.MidiRoundRobin.Cli.exe --midiIn="Arturia KeyStep 32" --midiOut="Elektron Model:Cycles" --channels="1,2,3,4,5,6"
              * 
              * 3. interactive (actuve if appsettings.json is empty and command line arguments are not used)
-             * > MB.MidiRoundRobin.exe
+             * > MB.MidiRoundRobin.Cli.exe
              * 
              */
 
