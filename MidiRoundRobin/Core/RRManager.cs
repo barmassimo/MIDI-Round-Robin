@@ -15,19 +15,19 @@ namespace MB.MidiRoundRobin.Core
         private byte[] _channels;
         private IDictionary<int, byte> _noteChannel;
 
-        public IList<MidiPortInfo> EnumerateMidiOutputs()
+        public IList<OutputMidiPortInfo> EnumerateMidiOutputs()
         {
             var access = MidiAccessManager.Default;
-            return access.Outputs.ToArray().Select(x => new MidiPortInfo { Id = x.Id, Description = x.Name }).ToArray();
+            return access.Outputs.ToArray().Select(x => new OutputMidiPortInfo { Id = x.Id, Description = x.Name }).ToArray();
         }
 
-        public IList<MidiPortInfo> EnumerateMidiInputs()
+        public IList<InputMidiPortInfo> EnumerateMidiInputs()
         {
             var access = MidiAccessManager.Default;
-            return access.Inputs.ToArray().Select(x => new MidiPortInfo { Id = x.Id, Description = x.Name }).ToArray();
+            return access.Inputs.ToArray().Select(x => new InputMidiPortInfo { Id = x.Id, Description = x.Name }).ToArray();
         }
 
-        public void StartRoundRobin(MidiPortInfo midiFrom, MidiPortInfo midiTo, byte[] channels)
+        public void StartRoundRobin(InputMidiPortInfo midiFrom, OutputMidiPortInfo midiTo, byte[] channels)
         {
             var access = MidiAccessManager.Default;
             _midiInput = access.OpenInputAsync(midiFrom.Id).Result;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MB.MidiRoundRobin.Core
 {
-    public class MidiPortInfo
+    public abstract class MidiPortInfo
     {
         public string Id { get; set; }
 
