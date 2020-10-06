@@ -5,6 +5,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>MB.MidiRoundRobin</RootNamespace>
     <AssemblyName>MB.MidiRoundRobin</AssemblyName>
+    <Version>1.0.1</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="managed-midi" Version="1.9.14" />
+  </ItemGroup>
 
 </Project>
