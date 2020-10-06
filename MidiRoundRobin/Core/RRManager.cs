@@ -15,23 +15,23 @@ namespace MB.MidiRoundRobin.Core
         private byte[] _channels;
         private IDictionary<int, byte> _noteChannel;
 
-        public IEnumerable<KeyValuePair<string, string>> EnumerateMidiOutputs()
+        public IList<MidiPortInfo> EnumerateMidiOutputs()
         {
             var access = MidiAccessManager.Default;
-            return access.Outputs.ToArray().Select(x => new KeyValuePair<string, string>(x.Id, x.Name));
+            return access.Outputs.ToArray().Select(x => new MidiPortInfo { Id = x.Id, Description = x.Name }).ToArray();
         }
 
-        public IEnumerable<KeyValuePair<string, string>> EnumerateMidiInputs()
+        public IList<MidiPortInfo> EnumerateMidiInputs()
         {
             var access = MidiAccessManager.Default;
-            return access.Inputs.ToArray().Select(x => new KeyValuePair<string, string>(x.Id, x.Name));
+            return access.Inputs.ToArray().Select(x => new MidiPortInfo { Id = x.Id, Description = x.Name }).ToArray();
         }
 
-        public void StartRoundRobin(string midiFromId, string midiToId, byte[] channels)
+        public void StartRoundRobin(MidiPortInfo midiFrom, MidiPortInfo midiTo, byte[] channels)
         {
             var access = MidiAccessManager.Default;
-            _midiInput = access.OpenInputAsync(midiFromId).Result;
-            _midiOutput = access.OpenOutputAsync(midiToId).Result;
+            _midiInput = access.OpenInputAsync(midiFrom.Id).Result;
+            _midiOutput = access.OpenOutputAsync(midiTo.Id).Result;
             _channels = channels;
             _noteChannel = new Dictionary<int, byte>();
 
@@ -88,8 +88,7 @@ namespace MB.MidiRoundRobin.Core
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOff + outputChannel - 1), note, velocity };
                 _midiOutput.Send(dataToSend, 0, 3, 0);
             }
-
-            if (eventType == MidiEvent.Pitch)
+            else if (eventType == MidiEvent.Pitch)
             {
                 //var note = e.Data[1];
                 //var velocity = e.Data[2];
