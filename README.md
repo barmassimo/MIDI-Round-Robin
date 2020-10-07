@@ -2,25 +2,27 @@ MidiRoundRobin
 ==============
 _MidiRoundRobin is a command line utility that performs a round robin between MIDI channels._
 
+![screenshot](screenshot.png)
+
 ## How it works
 Suppose you play some notes on a MIDI keyboard, let's say C, D, E, F on channel 1; here's what happens:
 
 **[MIDI keyboard]** -> C (ch **1**), D (ch **1**), E (ch **1**), F (ch **1**) -> **[MidiRoundRobin utility]** -> C (ch **1**), D (ch **2**), E (ch **3**), F (ch **1**)
 
-As you can see, output channels are rotated (round robin). The number and sequence of output channels can be configurated (see below).
+As you can see, output channels are rotated (round robin). The output channels sequence can be configurated (see below).
 
-This is useful if you whant to "spread" your notes between different MIDI channels, for example if you have three monophonic synths and you want to play polyphonic melodies.  
+This is useful if you whant to "spread" your notes between different MIDI channels, for example if you have three monophonic synths and you want to play polyphonic melodies.
+
 I created this application to play with Elektron Model:Cycles, a monophonic, six trax FM groovebox: all you have to do is:
 
 - set the same instrument on all six tracks of the Moidel:Cycles
 - connect the Model:Cycles via MIDI to the PC
-- launch MidiRoudRobin (MidiRR.exe) and, when asked:
+- launch MidiRoundRobin (MidiRR.exe) and, when asked:
 	- select your midi keyboard as MIDI in, and the Model:Cycles as MIDI out
 	- select the channels 1,2,3,4,5,6 as MIDI output to feed all the tracks
-- play you six notes chords!
+- play your six notes chords!
 
-Another use is a simple midi messages forward: if you set only one round robin channel, all midi messages will be simply forwarded from MIDI in to MIDI out port.  
-This is useful if you have an hardware synth and a MIDI keyboard or controller connected to your PC, and you want to play the synth without a full blown DAW.
+You can also set only one output channel, for a simple MIDI routing without a full blown DAW.
 
 ## Configuration
 There are 3 ways to configure MidiRoundRobin:
@@ -79,15 +81,13 @@ MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the choo
 
 ## Todo
 - ~~Handle configuration files.~~
-- Handle control change messages
-- Handle program change messages
-- Handle pitch bend messages
-- Create an icon. :-)
+- Handle control change / program change / pitch bend / aftertouch messages
+- Investigate Linux timing issues
 
 ## Environment
 * .NET Core 3
-* managed-midi package
-* tested on Windows 10, should work also on Mac/Linux
+* managed-midi package dependency
+* tested on Windows 10 and Linux (some timing issues on Ubuntu)
 
 ## License
 GNU GENERAL PUBLIC LICENSE V 3
