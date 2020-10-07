@@ -48,7 +48,7 @@ namespace MB.MidiRoundRobin.Cli
             if (midiIn == null)  // midi port not present in configuration or not found. Interactive mode
                 midiIn = ins.Count == 1
                     ? ins[0]
-                    : ins[GetNumber($"Select a MIDI input port (from 1 to {ins.Count})", 1, ins.Count) - 1];
+                    : ins[GetNumber($"Select a MIDI input port (from 1 to {ins.Count}):", 1, ins.Count) - 1];
 
             Console.WriteLine();
             Console.WriteLine("MIDI output ports:");
@@ -65,7 +65,7 @@ namespace MB.MidiRoundRobin.Cli
             if (midiOut == null)  // midi port not present in configuration or not found. Interactive mode
                 midiOut = ins.Count == 1
                     ? outs[0]
-                    : outs[GetNumber($"Select a MIDI output port (from 1 to {outs.Count})", 1, outs.Count) - 1];
+                    : outs[GetNumber($"Select a MIDI output port (from 1 to {outs.Count}):", 1, outs.Count) - 1];
 
             IEnumerable<byte> channels = null;
 
@@ -75,7 +75,7 @@ namespace MB.MidiRoundRobin.Cli
             if (channels == null) // channels not present in configuration or in wrong format. Interactive mode
             {
                 Console.WriteLine();
-                channels = GetNumbers("Select 2 or more MIDI channels to roud robin (e.g. 1,3,4)", 1, 16, 2, null);
+                channels = GetNumbers("Select 2 or more MIDI channels to roud robin (e.g. 1,3,4):", 1, 16, 2, null);
             }
 
             Console.WriteLine();
