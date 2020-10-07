@@ -18,7 +18,7 @@ namespace MB.MidiRoundRobin.Cli
         {
             var manager = new RRManager();
 
-            Console.WriteLine($"MidiRoudRobin v.{manager.GetVersion()}");
+            Console.WriteLine($"MidiRoundRobin v.{manager.GetVersion()}");
 
             var ins = manager.EnumerateMidiInputs();
             var outs = manager.EnumerateMidiOutputs();
@@ -75,7 +75,7 @@ namespace MB.MidiRoundRobin.Cli
             if (channels == null) // channels not present in configuration or in wrong format. Interactive mode
             {
                 Console.WriteLine();
-                channels = GetNumbers("Select 2 or more MIDI channels to roud robin (e.g. 1,3,4):", 1, 16, 2, null);
+                channels = GetNumbers("Select 1 or more MIDI channels to round robin (e.g. 1,3,4):", 1, 16, 1, null);
             }
 
             Console.WriteLine();
