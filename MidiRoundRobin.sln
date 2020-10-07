@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29409.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MB.MidiRoundRobin", "MB.MidiRoundRobin\MB.MidiRoundRobin.csproj", "{624AFDFA-6B61-4C37-BC01-29B95DB6DD0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MB.MidiRoundRobin", "MB.MidiRoundRobin\MB.MidiRoundRobin.csproj", "{624AFDFA-6B61-4C37-BC01-29B95DB6DD0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MB.MidiRoundRobin.Cli", "MB.MidiRoundRobin.Cli\MB.MidiRoundRobin.Cli.csproj", "{E9826389-299E-4F4F-AC29-DFFEEF45BCB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MB.MidiRoundRobin.Cli", "MB.MidiRoundRobin.Cli\MB.MidiRoundRobin.Cli.csproj", "{E9826389-299E-4F4F-AC29-DFFEEF45BCB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{92BC719B-DDBF-4CAE-A585-58DC8D778D41}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

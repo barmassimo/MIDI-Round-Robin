@@ -1,0 +1,8 @@
+﻿{
+  // execute the program to see the MIDI ports on your system
+  // remove the leading '//' from the lines below
+
+  // "midiIn": "Arturia KeyStep 32",
+  // "midiOut": "Elektron Model:Cycles",
+  // "channels": "1,2,3,4,5,6"
+}

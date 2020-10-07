@@ -80,7 +80,7 @@ namespace MB.MidiRoundRobin.Cli
 
             Console.WriteLine();
             Console.WriteLine($"Round robin from '{midiIn.Description}' to '{midiOut.Description}' on channels {string.Join(",", channels)}.");
-            Console.WriteLine($"Press [ENTER] to exit.");
+            Console.WriteLine($"Press [Enter] to exit.");
 
             manager.StartRoundRobin(midiIn, midiOut, channels.ToArray());
 
