@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 
-namespace MidiRoundRobin
+namespace MB.MidiRoundRobin.Cli
 {
     class Program
     {
@@ -37,7 +37,7 @@ namespace MidiRoundRobin
                 Channels = configuration?["channels"]
             };
 
-            var cli = new Cli(rrConfiguration);
+            var cli = new CliManager(rrConfiguration);
             cli.Go();
         }
     }

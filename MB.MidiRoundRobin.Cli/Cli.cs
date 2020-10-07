@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MidiRoundRobin
+namespace MB.MidiRoundRobin.Cli
 {
-    public class Cli
+    public class CliManager
     {
         private RRConfiguration _rrConfiguration;
 
-        public Cli(RRConfiguration rrConfiguration)
+        public CliManager(RRConfiguration rrConfiguration)
         {
             _rrConfiguration = rrConfiguration;
         }
