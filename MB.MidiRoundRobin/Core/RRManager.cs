@@ -88,23 +88,25 @@ namespace MB.MidiRoundRobin.Core
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOff + outputChannel - 1), note, velocity };
                 _midiOutput.Send(dataToSend, 0, 3, 0);
             }
-            else if (eventType == MidiEvent.Pitch)
+            else if (eventType >= MidiEvent.Pitch && eventType <= MidiEvent.Pitch + 15)
             {
-                // Console.WriteLine($"[{string.Join(", ", data)}] {e.Start} - {e.Length} - {e.Timestamp}");
-
-                //var note = e.Data[1];
-                //var velocity = e.Data[2];
-                //
-                //_midiOutput.Send(e.Data, 0, 3, 0);
+                // 1->N channels
+                foreach (var channel in _channels)
+                {
+                    var dataToSend = new byte[] { (byte)(MidiEvent.Pitch + channel - 1), e.Data[1], e.Data[2] };
+                    _midiOutput.Send(dataToSend, 0, 3, 0);
+                }
             }
-            else if (eventType == MidiEvent.CC)
+            else if (eventType >= MidiEvent.CC && eventType <= MidiEvent.CC + 15)
             {
-                // Console.WriteLine($"[{string.Join(", ", data)}] {e.Start} - {e.Length} - {e.Timestamp}");
+                //Console.WriteLine($"[{string.Join(", ", data)}] {e.Start} - {e.Length} - {e.Timestamp}");
 
-                //var note = e.Data[1];
-                //var velocity = e.Data[2];
-                //
-                //_midiOutput.Send(e.Data, 0, 3, 0);
+                // 1->N channels
+                foreach (var channel in _channels)
+                {
+                    var dataToSend = new byte[] { (byte)(MidiEvent.CC + channel - 1), e.Data[1], e.Data[2] };
+                    _midiOutput.Send(dataToSend, 0, 3, 0);
+                }
             }
         }
 

@@ -18,7 +18,7 @@ I created this application to play with Elektron Model:Cycles, a monophonic, six
 - set the same instrument on all six tracks of the Moidel:Cycles
 - connect the Model:Cycles via MIDI to the PC
 - launch MidiRoundRobin (MidiRR.exe) and, when asked:
-	- select your midi keyboard as MIDI in, and the Model:Cycles as MIDI out
+	- select your keyboard as MIDI in, and the Model:Cycles as MIDI out
 	- select the channels 1,2,3,4,5,6 as MIDI output to feed all the tracks
 - play your six notes chords!
 
@@ -67,7 +67,7 @@ Here's an example:
 ```
 
 ### 3. command line arguments
-Overwrites the configuration file:
+Overrides the configuration file:
 ```
 > MidiRR.exe --midiIn="Arturia KeyStep 32" --midiOut="Elektron Model:Cycles" --channels="1,2,3,4,5,6"
 ```
@@ -75,14 +75,14 @@ Overwrites the configuration file:
 You can mix 1, 2 and 3 (some settings passed by argument, some in MidiRR.settings.json and the rest entered in interactive mode).
 
 ## Limitations
-Only note on/off MIDI messages are currently handled - I'm working on this.
+Only note on/off, pitch bend and control change MIDI messages are currently handled.
 
 MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the choosen in and out MIDI ports will _NOT_ be available to the DAW.
 
 ## Todo
 - ~~Handle configuration files.~~
-- Handle control change / program change / pitch bend / aftertouch messages
-- Investigate Linux timing issues
+- Handle ~~control change~~ / ~~pitch bend~~ / program change / aftertouch messages
+- (!) Investigate Linux timing issues
 
 ## Environment
 * .NET Core 3
