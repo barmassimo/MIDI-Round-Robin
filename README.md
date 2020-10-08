@@ -51,7 +51,7 @@ Overrides the configuration file:
 You can mix 1, 2 and 3 (some settings passed by argument, some in MidiRR.settings.json and the rest entered in interactive mode).
 
 ## Limitations
-The following MIDI messages are supported: **note on/off**, **pitch bend**, **channel aftertouch**, **control change**, **program change**, **Clock**.  
+The following MIDI messages are supported: **note on/off**, **pitch bend**, **channel aftertouch**, **control change**, **program change**, **clock**.  
 Other messages types are discarded.
 
 MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chosen in and out MIDI ports will not be available to the DAW.
@@ -64,7 +64,7 @@ MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chos
 ## Todo
 - ~~handle configuration files~~
 - (!) investigate on Linux timing issues
-- testing on Mac - any volunteer? Just drop me a few lines
+- test on Mac - any volunteer? Just drop me a few lines
 
 ## License
 GNU GENERAL PUBLIC LICENSE V 3
