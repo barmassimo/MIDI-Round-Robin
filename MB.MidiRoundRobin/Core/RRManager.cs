@@ -46,11 +46,13 @@ namespace MB.MidiRoundRobin.Core
 
         private void Input_MessageReceived(object sender, MidiReceivedEventArgs e)
         {
-            var data = string.Join(", ", e.Data);
-
             var eventType = e.Data[0];
+            var eventTypeNormalized = GetEventTypeNormalized(eventType);
 
-            if (eventType >= MidiEvent.NoteOn && eventType <= MidiEvent.NoteOn + 15)
+            if (eventTypeNormalized == null) return;
+
+            // note on
+            if (eventTypeNormalized == MidiEvent.NoteOn)
             {
                 var note = e.Data[1];
                 var velocity = e.Data[2];
@@ -68,13 +70,14 @@ namespace MB.MidiRoundRobin.Core
                 }
 
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOn + outputChannel - 1), note, velocity };
-                _midiOutput.Send(dataToSend, 0, 3, 0);
+                _midiOutput.Send(dataToSend, 0, dataToSend.Length, 0);
 
                 _noteChannel[note] = outputChannel;
 
                 _channelIndex++;
             }
-            else if (eventType >= MidiEvent.NoteOff && eventType <= MidiEvent.NoteOff + 15)
+            // note off
+            else if (eventTypeNormalized == MidiEvent.NoteOff)
             {
                 var note = e.Data[1];
                 var velocity = e.Data[2];
@@ -86,28 +89,46 @@ namespace MB.MidiRoundRobin.Core
                 _noteChannel.Remove(note);
 
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOff + outputChannel - 1), note, velocity };
-                _midiOutput.Send(dataToSend, 0, 3, 0);
+                _midiOutput.Send(dataToSend, 0, dataToSend.Length, 0);
             }
-            else if (eventType >= MidiEvent.Pitch && eventType <= MidiEvent.Pitch + 15)
+            // clock: forwarding
+            else if (eventTypeNormalized == MidiEvent.MidiClock)
             {
-                // 1->N channels
-                foreach (var channel in _channels)
-                {
-                    var dataToSend = new byte[] { (byte)(MidiEvent.Pitch + channel - 1), e.Data[1], e.Data[2] };
-                    _midiOutput.Send(dataToSend, 0, 3, 0);
-                }
+                _midiOutput.Send(e.Data, 0, e.Data.Length, 0);
             }
-            else if (eventType >= MidiEvent.CC && eventType <= MidiEvent.CC + 15)
+            // other type of events: forwarding on every channel
+            else
             {
-                //Console.WriteLine($"[{string.Join(", ", data)}] {e.Start} - {e.Length} - {e.Timestamp}");
+                var dataToSend = e.Data.ToArray();
 
                 // 1->N channels
                 foreach (var channel in _channels)
                 {
-                    var dataToSend = new byte[] { (byte)(MidiEvent.CC + channel - 1), e.Data[1], e.Data[2] };
-                    _midiOutput.Send(dataToSend, 0, 3, 0);
+                    dataToSend[0] = (byte)(eventTypeNormalized + channel - 1);
+                    _midiOutput.Send(dataToSend, 0, dataToSend.Length, 0);
                 }
             }
+        }
+
+        private byte? GetEventTypeNormalized(byte eventType)
+        {
+            // events with channel
+            if (CheckEventType(eventType, MidiEvent.NoteOn)) return MidiEvent.NoteOn;
+            if (CheckEventType(eventType, MidiEvent.NoteOff)) return MidiEvent.NoteOff;
+            if (CheckEventType(eventType, MidiEvent.Pitch)) return MidiEvent.Pitch;
+            if (CheckEventType(eventType, MidiEvent.CAf)) return MidiEvent.CAf;
+            if (CheckEventType(eventType, MidiEvent.CC)) return MidiEvent.CC;
+            if (CheckEventType(eventType, MidiEvent.Program)) return MidiEvent.Program;
+
+            // events without channel
+            if (eventType == MidiEvent.MidiClock) return MidiEvent.MidiClock;
+
+            return null; // not handled
+        }
+
+        private bool CheckEventType(byte eventType, byte eventTypeToCheck)
+        {
+            return (eventType >= eventTypeToCheck && eventType <= eventTypeToCheck + 15);
         }
 
         public string GetVersion()

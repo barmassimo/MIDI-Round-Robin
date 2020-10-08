@@ -13,7 +13,7 @@ As you can see, output channels are rotated (round robin). The output channels s
 
 This is useful if you want to "spread" your notes between different MIDI channels, for example if you have three monophonic synths and you want to play polyphonic melodies.
 
-I created this application to play with Elektron Model:Cycles, a monophonic, six trax FM groovebox: all you have to do is:
+I created this application to play with Elektron Model:Cycles, a monophonic, six tracks synth; all you have to do is:
 
 - set the same instrument on all six tracks of the Moidel:Cycles
 - connect the Model:Cycles via MIDI to the PC
@@ -51,9 +51,10 @@ Overrides the configuration file:
 You can mix 1, 2 and 3 (some settings passed by argument, some in MidiRR.settings.json and the rest entered in interactive mode).
 
 ## Limitations
-Only note **on/off**, **pitch bend** and **control change** MIDI messages are currently handled.
+The following MIDI messages are supported: **note on/off**, **pitch bend**, **channel aftertouch**, **control change**, **program change**, **Clock**.  
+Other messages types are discarded.
 
-MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chosen in and out MIDI ports will _NOT_ be available to the DAW.
+MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chosen in and out MIDI ports will not be available to the DAW.
 
 ## Environment and supported platforms
 * .NET Core 3
@@ -62,7 +63,6 @@ MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chos
 
 ## Todo
 - ~~handle configuration files~~
-- handle ~~control change~~ / ~~pitch bend~~ / program change / aftertouch messages
 - (!) investigate on Linux timing issues
 - testing on Mac - any volunteer? Just drop me a few lines
 
