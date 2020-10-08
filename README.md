@@ -1,6 +1,6 @@
 MidiRoundRobin
 ==============
-_MidiRoundRobin is a command line utility that performs a round robin between MIDI channels._
+MidiRoundRobin is a command line utility that performs a round robin between MIDI channels.
 
 ![screenshot](screenshot.png)
 
@@ -11,7 +11,7 @@ Suppose you play some notes on a MIDI keyboard, let's say C, D, E, F on channel 
 
 As you can see, output channels are rotated (round robin). The output channels sequence can be configurated (see below).
 
-This is useful if you whant to "spread" your notes between different MIDI channels, for example if you have three monophonic synths and you want to play polyphonic melodies.
+This is useful if you want to "spread" your notes between different MIDI channels, for example if you have three monophonic synths and you want to play polyphonic melodies.
 
 I created this application to play with Elektron Model:Cycles, a monophonic, six trax FM groovebox: all you have to do is:
 
@@ -28,34 +28,10 @@ You can also set only one output channel, for a simple MIDI routing without a fu
 There are 3 ways to configure MidiRoundRobin:
 
 ### 1. interactive mode
-The default, active if methods 2 and 3 are not used); you are asked for MIDI in/out ports and channels:
-```
-> MidiRR.exe
-MidiRoundRobin v.2.1.0.0
-
-MIDI input ports:
-1 - Arturia KeyStep 32
-2 - nanoKONTROL2
-3 - Roland Digital Piano
-4 - Elektron Model:Cycles
-Select a MIDI input port (from 1 to 4): 1
-
-MIDI output ports:
-1 - Microsoft GS Wavetable Synth
-2 - Arturia KeyStep 32
-3 - nanoKONTROL2
-4 - Roland Digital Piano
-5 - Elektron Model:Cycles
-Select a MIDI output port (from 1 to 5): 4
-
-Select 1 or more MIDI channels to round robin (e.g. 1,3,4): 1,2,3,4,5,6
-
-Round robin from 'Arturia KeyStep 32' to 'Roland Digital Piano' on channels 1,2,3,4,5,6.
-Press [Enter] to exit.
-```
+The default, active if methods 2 and 3 are not used; you are asked for MIDI in/out ports and channels - see the screenshot above.
 
 ### 2. configuration file
-You can create a json file named **MidiRR.settings.json** to store the settings. Put it on the same fordel as the executable.  
+You can create a json file named **MidiRR.settings.json** to store the settings. Put it on the same folder as the executable.  
 Here's an example:
 ```json
 // MidiRR.settings.json
@@ -75,19 +51,20 @@ Overrides the configuration file:
 You can mix 1, 2 and 3 (some settings passed by argument, some in MidiRR.settings.json and the rest entered in interactive mode).
 
 ## Limitations
-Only note on/off, pitch bend and control change MIDI messages are currently handled.
+Only note **on/off**, **pitch bend** and **control change** MIDI messages are currently handled.
 
-MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the choosen in and out MIDI ports will _NOT_ be available to the DAW.
+MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chosen in and out MIDI ports will _NOT_ be available to the DAW.
 
-## Todo
-- ~~Handle configuration files.~~
-- Handle ~~control change~~ / ~~pitch bend~~ / program change / aftertouch messages
-- (!) Investigate Linux timing issues
-
-## Environment
+## Environment and supported platforms
 * .NET Core 3
 * managed-midi package dependency
-* tested on Windows 10 and Linux (some timing issues on Ubuntu)
+* tested on Windows 10 and Linux - some timing issues on Ubuntu
+
+## Todo
+- ~~handle configuration files~~
+- handle ~~control change~~ / ~~pitch bend~~ / program change / aftertouch messages
+- (!) investigate on Linux timing issues
+- testing on Mac - any volunteer? Just drop me a few lines
 
 ## License
 GNU GENERAL PUBLIC LICENSE V 3
