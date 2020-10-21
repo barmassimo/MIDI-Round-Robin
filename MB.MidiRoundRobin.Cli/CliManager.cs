@@ -85,9 +85,12 @@ namespace MB.MidiRoundRobin.Cli
             manager.StartRoundRobin(midiIn, midiOut, channels.ToArray());
 
             Console.ReadLine();
-            Console.WriteLine($"Exiting.");
+            Console.Write($"Disposing MIDI port connections...");
 
             manager.StopRoundRobin();
+
+            Console.WriteLine($" Ok.");
+            Console.WriteLine($"Exiting.");
         }
 
         private int GetNumber(string message, int min, int max)
