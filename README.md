@@ -19,7 +19,7 @@ I created this application to play with Elektron Model:Cycles, a monophonic, six
 - connect the Model:Cycles via MIDI to the PC
 - launch MidiRoundRobin (MidiRR.exe) and, when asked:
 	- select your keyboard as MIDI in, and the Model:Cycles as MIDI out
-	- select the channels 1,2,3,4,5,6 as MIDI output to feed all the tracks
+	- select the channels 1-6 (from 1 to 6) as MIDI output to feed all the tracks
 - play your six notes chords!
 
 You can also set only one output channel, for a simple MIDI routing without a full blown DAW.
@@ -54,7 +54,8 @@ You can mix 1, 2 and 3 (some settings passed by argument, some in MidiRR.setting
 The following MIDI messages are supported: **note on/off**, **pitch bend**, **channel aftertouch**, **control change**, **program change**, **clock**.  
 Other messages types are discarded.
 
-MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chosen in and out MIDI ports will not be available to the DAW.
+MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chosen in and out MIDI ports will not be available to the DAW.  
+_Note: MidiRoundRobin should be launched before the DAW._
 
 ## Environment and supported platforms
 * .NET Core 3
@@ -63,6 +64,7 @@ MidiRoundRobin can be used together with a DAW (e.g. Ableton Live), but the chos
 
 ## Todo
 - ~~handle configuration files~~
+- ~~handle MIDI channel ranges in configuration (1,3-8,10)~~
 - (!) investigate on Linux timing issues
 - test on Mac - any volunteer? Just drop me a few lines
 

@@ -75,7 +75,7 @@ namespace MB.MidiRoundRobin.Cli
             if (channels == null) // channels not present in configuration or in wrong format. Interactive mode
             {
                 Console.WriteLine();
-                channels = GetNumbers("Select 1 or more MIDI channels to round robin (e.g. 1,3,4):", 1, 16, 1, null);
+                channels = GetNumbers("Select one or more MIDI channels to round robin (e.g. 1,2,4-6):", 1, 16, 1, null);
             }
 
             Console.WriteLine();
@@ -125,12 +125,27 @@ namespace MB.MidiRoundRobin.Cli
 
             foreach (var nStr in s.Split(','))
             {
-                if (byte.TryParse(nStr, out byte n))
+                if (byte.TryParse(nStr, out byte n)) // 1,2,3
                 {
                     if (n < min || n > max)
                         return null;
 
                     numbers.Add(n);
+                }
+                else if (nStr.Contains("-")) // 1,2,5-8
+                {
+                    var nStrRange = nStr.Split("-");
+                    if (nStrRange.Length != 2)
+                        return null;
+
+                    if (!byte.TryParse(nStrRange[0], out byte nFrom) || !byte.TryParse(nStrRange[1], out byte nTo))
+                        return null;
+
+                    if (nFrom < min || nTo > max)
+                        return null;
+
+                    for (byte i = nFrom; i <= nTo; i++)
+                        numbers.Add(i);
                 }
                 else
                 {
