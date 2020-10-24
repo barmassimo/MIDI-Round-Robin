@@ -33,7 +33,7 @@ The default, active if methods 2 and 3 are not used; you are asked for MIDI in/o
 ### 2. configuration file
 You can create a json file named **MidiRR.settings.json** to store the settings. Put it on the same folder as the executable.  
 Here's an example:
-```json
+```jsonc
 // MidiRR.settings.json
 {
   "midiIn": "Arturia KeyStep 32",
