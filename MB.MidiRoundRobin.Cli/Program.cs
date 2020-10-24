@@ -20,7 +20,8 @@ namespace MB.MidiRoundRobin.Cli
             {
                 MidiIn = configuration?["midiIn"],
                 MidiOut = configuration?["midiOut"],
-                Channels = configuration?["channels"]
+                MidiChannelsIn = configuration?["midiChannelsIn"],
+                MidiChannelsOut = configuration?["midiChannelsOut"]
             };
 
             var cli = new CliManager(rrConfiguration);

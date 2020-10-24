@@ -12,7 +12,8 @@ namespace MB.MidiRoundRobin.Core
         private IMidiInput _midiInput;
         private IMidiOutput _midiOutput;
         private int _channelIndex = 0;
-        private byte[] _channels;
+        private byte[] _midiChannelsIn;
+        private byte[] _midiChannelsOut;
         private IDictionary<int, byte> _noteChannel;
 
         public IList<OutputMidiPortInfo> EnumerateMidiOutputs()
@@ -27,12 +28,13 @@ namespace MB.MidiRoundRobin.Core
             return access.Inputs.ToArray().Select(x => new InputMidiPortInfo { Id = x.Id, Description = x.Name }).ToArray();
         }
 
-        public void StartRoundRobin(InputMidiPortInfo midiFrom, OutputMidiPortInfo midiTo, byte[] channels)
+        public void StartRoundRobin(InputMidiPortInfo midiFrom, OutputMidiPortInfo midiTo, byte[] midiChannelsIn, byte[] midiChannelsOut)
         {
             var access = MidiAccessManager.Default;
             _midiInput = access.OpenInputAsync(midiFrom.Id).Result;
             _midiOutput = access.OpenOutputAsync(midiTo.Id).Result;
-            _channels = channels;
+            _midiChannelsIn = midiChannelsIn;
+            _midiChannelsOut = midiChannelsOut;
             _noteChannel = new Dictionary<int, byte>();
 
             _midiInput.MessageReceived += Input_MessageReceived;
@@ -51,6 +53,8 @@ namespace MB.MidiRoundRobin.Core
 
             if (eventTypeNormalized == null) return;
 
+            var inputChannel = (byte)(eventType - eventTypeNormalized.Value + 1);
+
             // note on
             if (eventTypeNormalized == MidiEvent.NoteOn)
             {
@@ -60,21 +64,30 @@ namespace MB.MidiRoundRobin.Core
                 if (_noteChannel.ContainsKey(note))
                     return; // note already pressed. Nothing to do
 
-                var busyChannels = _noteChannel.Values;
-                var freeChannels = _channels.Where(x => !busyChannels.Contains(x)).ToArray();
+                byte outputChannel;
 
-                var outputChannel = _channels[_channelIndex % _channels.Length];
-                if (busyChannels.Contains(outputChannel) && freeChannels.Count() > 0)
+                if (_midiChannelsIn.Contains(inputChannel)) // input channel round robin to the output channels
                 {
-                    outputChannel = freeChannels[_channelIndex % freeChannels.Length];
+                    var busyChannels = _noteChannel.Values;
+                    var freeChannels = _midiChannelsOut.Where(x => !busyChannels.Contains(x)).ToArray();
+
+                    outputChannel = _midiChannelsOut[_channelIndex % _midiChannelsOut.Length];
+                    if (busyChannels.Contains(outputChannel) && freeChannels.Count() > 0)
+                    {
+                        outputChannel = freeChannels[_channelIndex % freeChannels.Length];
+                    }
+
+                    _channelIndex++;
+                }
+                else // input channel excluded from round robin: echoing the message on the same channel
+                {
+                    outputChannel = inputChannel;
                 }
 
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOn + outputChannel - 1), note, velocity };
                 _midiOutput.Send(dataToSend, 0, dataToSend.Length, 0);
 
                 _noteChannel[note] = outputChannel;
-
-                _channelIndex++;
             }
             // note off
             else if (eventTypeNormalized == MidiEvent.NoteOff)
@@ -102,7 +115,7 @@ namespace MB.MidiRoundRobin.Core
                 var dataToSend = e.Data.ToArray();
 
                 // 1->N channels
-                foreach (var channel in _channels)
+                foreach (var channel in _midiChannelsOut)
                 {
                     dataToSend[0] = (byte)(eventTypeNormalized + channel - 1);
                     _midiOutput.Send(dataToSend, 0, dataToSend.Length, 0);

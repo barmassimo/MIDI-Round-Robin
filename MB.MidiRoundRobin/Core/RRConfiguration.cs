@@ -8,6 +8,7 @@ namespace MB.MidiRoundRobin.Core
     {
         public string MidiIn { get; set; }
         public string MidiOut { get; set; }
-        public string Channels { get; set; }
+        public string MidiChannelsIn { get; set; }
+        public string MidiChannelsOut { get; set; }
     }
 }

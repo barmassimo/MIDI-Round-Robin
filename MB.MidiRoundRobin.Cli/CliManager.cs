@@ -33,6 +33,7 @@ namespace MB.MidiRoundRobin.Cli
                 Console.WriteLine("No MIDI output ports available. Exiting.");
             }
 
+            // MIDI IN
             Console.WriteLine();
             Console.WriteLine("MIDI input ports:");
             for (var n = 0; n < ins.Count; n++)
@@ -48,8 +49,9 @@ namespace MB.MidiRoundRobin.Cli
             if (midiIn == null)  // midi port not present in configuration or not found. Interactive mode
                 midiIn = ins.Count == 1
                     ? ins[0]
-                    : ins[GetNumber($"Select a MIDI input port (from 1 to {ins.Count}):", 1, ins.Count) - 1];
+                    : ins[GetNumber($"Select a MIDI input port (from 1 to {ins.Count}):", 1, (byte)ins.Count) - 1];
 
+            // MIDI OUT
             Console.WriteLine();
             Console.WriteLine("MIDI output ports:");
             for (var n = 0; n < outs.Count; n++)
@@ -65,24 +67,40 @@ namespace MB.MidiRoundRobin.Cli
             if (midiOut == null)  // midi port not present in configuration or not found. Interactive mode
                 midiOut = ins.Count == 1
                     ? outs[0]
-                    : outs[GetNumber($"Select a MIDI output port (from 1 to {outs.Count}):", 1, outs.Count) - 1];
+                    : outs[GetNumber($"Select a MIDI output port (from 1 to {outs.Count}):", 1, (byte)outs.Count) - 1];
 
-            IEnumerable<byte> channels = null;
+            // MIDI channels IN
+            IEnumerable<byte> midiChannelsIn = null;
+            if (!string.IsNullOrEmpty(_rrConfiguration.MidiChannelsIn))
+                midiChannelsIn = SplitNumbers(_rrConfiguration.MidiChannelsIn, 1, 16, 0, null);
 
-            if (!string.IsNullOrEmpty(_rrConfiguration.Channels))
-                channels = SplitNumbers(_rrConfiguration.Channels, 1, 16, 2, null);
-
-            if (channels == null) // channels not present in configuration or in wrong format. Interactive mode
+            if (midiChannelsIn == null)
             {
                 Console.WriteLine();
-                channels = GetNumbers("Select one or more MIDI channels to round robin (e.g. 1,2,4-6):", 1, 16, 1, null);
+                midiChannelsIn = GetNumbers("Select one or more MIDI input channels: (e.g. 1,2,4-6, default: all)", 1, 16, 0, 16);
+            }
+
+            if (midiChannelsIn.Count() == 0)
+                midiChannelsIn = SplitNumbers("1-16", 1, 16, 0, null);
+
+            // MIDI channels OUT
+            IEnumerable<byte> midiChannelsOut = null;
+            if (!string.IsNullOrEmpty(_rrConfiguration.MidiChannelsOut))
+                midiChannelsOut = SplitNumbers(_rrConfiguration.MidiChannelsOut, 1, 16, 2, null);
+
+            if (midiChannelsOut == null) // channels not present in configuration or in wrong format. Interactive mode
+            {
+                Console.WriteLine();
+                midiChannelsOut = GetNumbers("Select one or more MIDI channels to round robin (e.g. 1,2,4-6):", 1, 16, 1, null);
             }
 
             Console.WriteLine();
-            Console.WriteLine($"Round robin from '{midiIn.Description}' to '{midiOut.Description}' on channels {string.Join(",", channels)}.");
+            Console.WriteLine($"Round robin from '{midiIn.Description}' to '{midiOut.Description}'.");
+            Console.WriteLine($"MIDI input channels: { string.Join(",", midiChannelsIn)}.");
+            Console.WriteLine($"MIDI output channels (round robin): {string.Join(",", midiChannelsOut)}.");
             Console.WriteLine($"Press [Enter] to exit.");
 
-            manager.StartRoundRobin(midiIn, midiOut, channels.ToArray());
+            manager.StartRoundRobin(midiIn, midiOut, midiChannelsIn.ToArray(), midiChannelsOut.ToArray());
 
             Console.ReadLine();
             Console.Write($"Disposing MIDI port connections...");
@@ -93,13 +111,13 @@ namespace MB.MidiRoundRobin.Cli
             Console.WriteLine($"Exiting.");
         }
 
-        private int GetNumber(string message, int min, int max)
+        private byte GetNumber(string message, byte min, byte max)
         {
             while (true)
             {
                 Console.Write($"{message} ");
 
-                if (int.TryParse(Console.ReadLine(), out int n))
+                if (byte.TryParse(Console.ReadLine(), out byte n))
                 {
                     if (n >= min && n <= max)
                         return n;
@@ -107,7 +125,7 @@ namespace MB.MidiRoundRobin.Cli
             }
         }
 
-        private byte[] GetNumbers(string message, int min, int max, int? nMin, int? nMax)
+        private byte[] GetNumbers(string message, byte min, byte max, int? nMin, int? nMax)
         {
             while (true)
             {
@@ -119,20 +137,23 @@ namespace MB.MidiRoundRobin.Cli
             }
         }
 
-        private List<byte> SplitNumbers(string s, int min, int max, int? nMin, int? nMax)
+        private List<byte> SplitNumbers(string s, byte min, byte max, int? nMin, int? nMax)
         {
             var numbers = new List<byte>();
 
+            if (s == "" && nMin == 0) // "" = empty list
+                return numbers;
+
             foreach (var nStr in s.Split(','))
             {
-                if (byte.TryParse(nStr, out byte n)) // 1,2,3
+                if (byte.TryParse(nStr, out byte n)) // single number
                 {
                     if (n < min || n > max)
                         return null;
 
                     numbers.Add(n);
                 }
-                else if (nStr.Contains("-")) // 1,2,5-8
+                else if (nStr.Contains("-")) // range (5-8)
                 {
                     var nStrRange = nStr.Split("-");
                     if (nStrRange.Length != 2)
