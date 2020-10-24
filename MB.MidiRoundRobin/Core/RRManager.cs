@@ -9,8 +9,8 @@ namespace MB.MidiRoundRobin.Core
 {
     public class RRManager
     {
-        private IMidiInput _midiInput;
-        private IMidiOutput _midiOutput;
+        private IMidiInput _midiIn;
+        private IMidiOutput _midiOut;
         private int _channelIndex = 0;
         private byte[] _midiChannelsIn;
         private byte[] _midiChannelsOut;
@@ -31,19 +31,20 @@ namespace MB.MidiRoundRobin.Core
         public void StartRoundRobin(InputMidiPortInfo midiFrom, OutputMidiPortInfo midiTo, byte[] midiChannelsIn, byte[] midiChannelsOut)
         {
             var access = MidiAccessManager.Default;
-            _midiInput = access.OpenInputAsync(midiFrom.Id).Result;
-            _midiOutput = access.OpenOutputAsync(midiTo.Id).Result;
+            _midiIn = access.OpenInputAsync(midiFrom.Id).Result;
+            _midiOut = access.OpenOutputAsync(midiTo.Id).Result;
             _midiChannelsIn = midiChannelsIn;
             _midiChannelsOut = midiChannelsOut;
+
             _noteChannel = new Dictionary<int, byte>();
 
-            _midiInput.MessageReceived += Input_MessageReceived;
+            _midiIn.MessageReceived += Input_MessageReceived;
         }
 
         public void StopRoundRobin()
         {
-            _midiInput.CloseAsync();
-            _midiOutput.CloseAsync();
+            _midiIn.CloseAsync();
+            _midiOut.CloseAsync();
         }
 
         private void Input_MessageReceived(object sender, MidiReceivedEventArgs e)
@@ -85,7 +86,7 @@ namespace MB.MidiRoundRobin.Core
                 }
 
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOn + outputChannel - 1), note, velocity };
-                _midiOutput.Send(dataToSend, 0, dataToSend.Length, 0);
+                _midiOut.Send(dataToSend, 0, dataToSend.Length, 0);
 
                 _noteChannel[note] = outputChannel;
             }
@@ -102,12 +103,12 @@ namespace MB.MidiRoundRobin.Core
                 _noteChannel.Remove(note);
 
                 var dataToSend = new byte[] { (byte)(MidiEvent.NoteOff + outputChannel - 1), note, velocity };
-                _midiOutput.Send(dataToSend, 0, dataToSend.Length, 0);
+                _midiOut.Send(dataToSend, 0, dataToSend.Length, 0);
             }
             // clock: forwarding
             else if (eventTypeNormalized == MidiEvent.MidiClock)
             {
-                _midiOutput.Send(e.Data, 0, e.Data.Length, 0);
+                _midiOut.Send(e.Data, 0, e.Data.Length, 0);
             }
             // other type of events: forwarding on every channel
             else
@@ -118,7 +119,7 @@ namespace MB.MidiRoundRobin.Core
                 foreach (var channel in _midiChannelsOut)
                 {
                     dataToSend[0] = (byte)(eventTypeNormalized + channel - 1);
-                    _midiOutput.Send(dataToSend, 0, dataToSend.Length, 0);
+                    _midiOut.Send(dataToSend, 0, dataToSend.Length, 0);
                 }
             }
         }
