@@ -7,7 +7,7 @@ MidiRoundRobin is a command line utility that performs a round robin between MID
 ## How it works
 Suppose you play some notes on a MIDI keyboard, let's say C, D, E, F on channel 1; here's what happens:
 
-**[MIDI keyboard]** -> C (ch **1**), D (ch **1**), E (ch **1**), F (ch **1**) -> **[MidiRoundRobin utility]** -> C (ch **1**), D (ch **2**), E (ch **3**), F (ch **1**)
+**[MIDI keyboard]** -> C (ch **1**), D (ch **1**), E (ch **1**), F (ch **1**) -> **[MidiRoundRobin]** -> C (ch **1**), D (ch **2**), E (ch **3**), F (ch **1**)
 
 As you can see, output channels are rotated (round robin). The output channels sequence can be configurated (see below).
 
@@ -19,7 +19,7 @@ I created this application to play with Elektron Model:Cycles, a monophonic, six
 - connect the Model:Cycles via MIDI to the PC
 - launch MidiRoundRobin (MidiRR.exe) and, when asked:
 	- select your keyboard as MIDI in, and the Model:Cycles as MIDI out
-	- select the channels 1-6 (from 1 to 6) as MIDI output to feed all the tracks
+	- select channels 1-6 (from 1 to 6) as MIDI output to feed all the tracks
 - play your six notes chords!
 
 You can also set only one output channel, for a simple MIDI routing without a full blown DAW.
@@ -38,14 +38,15 @@ Here's an example:
 {
   "midiIn": "Arturia KeyStep 32",
   "midiOut": "Elektron Model:Cycles",
-  "channels": "1,2,3,4,5,6"
+  "midiChannelsIn": "16", // other channels are echoed to MIDI out on the same channel
+  "midiChannelsOut": "1,2,3" // 1,2,3,1,2,3,...
 }
 ```
 
 ### 3. command line arguments
 Overrides the configuration file:
 ```
-> MidiRR.exe --midiIn="Arturia KeyStep 32" --midiOut="Elektron Model:Cycles" --channels="1,2,3,4,5,6"
+> MidiRR.exe --midiIn="Arturia KeyStep 32" --midiOut="Elektron Model:Cycles" --midiChannelsIn="16" --midiChannelsOut="1,2,3"
 ```
 
 You can mix 1, 2 and 3 (some settings passed by argument, some in MidiRR.settings.json and the rest entered in interactive mode).
