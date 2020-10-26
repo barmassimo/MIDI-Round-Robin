@@ -60,7 +60,7 @@ _Note: MidiRoundRobin should be launched before the DAW._
 
 ## Environment and supported platforms
 * .NET Core 3
-* managed-midi package dependency
+* [managed-midi](https://github.com/atsushieno/managed-midi) package dependency
 * tested on Windows 10 and Linux - some timing issues on Ubuntu
 
 ## Todo
