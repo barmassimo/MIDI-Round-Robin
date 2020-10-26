@@ -147,7 +147,10 @@ namespace MB.MidiRoundRobin.Core
 
         public string GetVersion()
         {
-            return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var v = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            v = v.Substring(0, v.Length - 2);
+
+            return v;
         }
     }
 }
